@@ -1,0 +1,78 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{B96DD23E-D8C2-49D1-A67C-30F6B731734A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroLine.Services.Booking.Domain", "Source\MicroLine.Services.Booking.Domain\MicroLine.Services.Booking.Domain.csproj", "{A70CB1BF-92F7-4394-8BFB-F27C161E0DE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroLine.Services.Booking.WebApi", "Source\MicroLine.Services.Booking.WebApi\MicroLine.Services.Booking.WebApi.csproj", "{7500AD9C-AC59-4EF7-A3A6-ABD11651D6A0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{78D023DD-65B8-4AC3-BBB9-6A2427B84BD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroLine.Services.Booking.Tests.Architecture", "Tests\MicroLine.Services.Booking.Tests.Architecture\MicroLine.Services.Booking.Tests.Architecture.csproj", "{943A5433-11A4-40A4-A283-A8C3EF8E040F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroLine.Services.Booking.Tests.Common", "Tests\MicroLine.Services.Booking.Tests.Common\MicroLine.Services.Booking.Tests.Common.csproj", "{AEB0987B-D2FD-44C7-8D7E-32C7FAC2DABA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroLine.Services.Booking.Tests.EndToEnd", "Tests\MicroLine.Services.Booking.Tests.EndToEnd\MicroLine.Services.Booking.Tests.EndToEnd.csproj", "{B8E5AC37-E942-4FD2-BD8D-0BA597417F72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroLine.Services.Booking.Tests.Integration", "Tests\MicroLine.Services.Booking.Tests.Integration\MicroLine.Services.Booking.Tests.Integration.csproj", "{72130EE0-F567-452A-BBD2-576415290ED3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroLine.Services.Booking.Tests.Performance", "Tests\MicroLine.Services.Booking.Tests.Performance\MicroLine.Services.Booking.Tests.Performance.csproj", "{CC589492-0C6A-433A-B871-D0DA8EA4982B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroLine.Services.Booking.Tests.Unit", "Tests\MicroLine.Services.Booking.Tests.Unit\MicroLine.Services.Booking.Tests.Unit.csproj", "{F9F154D0-A205-4083-B0E1-0DA54224237C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A70CB1BF-92F7-4394-8BFB-F27C161E0DE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A70CB1BF-92F7-4394-8BFB-F27C161E0DE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A70CB1BF-92F7-4394-8BFB-F27C161E0DE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A70CB1BF-92F7-4394-8BFB-F27C161E0DE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7500AD9C-AC59-4EF7-A3A6-ABD11651D6A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7500AD9C-AC59-4EF7-A3A6-ABD11651D6A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7500AD9C-AC59-4EF7-A3A6-ABD11651D6A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7500AD9C-AC59-4EF7-A3A6-ABD11651D6A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{943A5433-11A4-40A4-A283-A8C3EF8E040F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{943A5433-11A4-40A4-A283-A8C3EF8E040F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{943A5433-11A4-40A4-A283-A8C3EF8E040F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{943A5433-11A4-40A4-A283-A8C3EF8E040F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEB0987B-D2FD-44C7-8D7E-32C7FAC2DABA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEB0987B-D2FD-44C7-8D7E-32C7FAC2DABA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEB0987B-D2FD-44C7-8D7E-32C7FAC2DABA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEB0987B-D2FD-44C7-8D7E-32C7FAC2DABA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8E5AC37-E942-4FD2-BD8D-0BA597417F72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8E5AC37-E942-4FD2-BD8D-0BA597417F72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8E5AC37-E942-4FD2-BD8D-0BA597417F72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8E5AC37-E942-4FD2-BD8D-0BA597417F72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72130EE0-F567-452A-BBD2-576415290ED3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72130EE0-F567-452A-BBD2-576415290ED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72130EE0-F567-452A-BBD2-576415290ED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72130EE0-F567-452A-BBD2-576415290ED3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC589492-0C6A-433A-B871-D0DA8EA4982B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC589492-0C6A-433A-B871-D0DA8EA4982B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC589492-0C6A-433A-B871-D0DA8EA4982B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC589492-0C6A-433A-B871-D0DA8EA4982B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9F154D0-A205-4083-B0E1-0DA54224237C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9F154D0-A205-4083-B0E1-0DA54224237C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9F154D0-A205-4083-B0E1-0DA54224237C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9F154D0-A205-4083-B0E1-0DA54224237C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A70CB1BF-92F7-4394-8BFB-F27C161E0DE5} = {B96DD23E-D8C2-49D1-A67C-30F6B731734A}
+		{7500AD9C-AC59-4EF7-A3A6-ABD11651D6A0} = {B96DD23E-D8C2-49D1-A67C-30F6B731734A}
+		{943A5433-11A4-40A4-A283-A8C3EF8E040F} = {78D023DD-65B8-4AC3-BBB9-6A2427B84BD8}
+		{AEB0987B-D2FD-44C7-8D7E-32C7FAC2DABA} = {78D023DD-65B8-4AC3-BBB9-6A2427B84BD8}
+		{B8E5AC37-E942-4FD2-BD8D-0BA597417F72} = {78D023DD-65B8-4AC3-BBB9-6A2427B84BD8}
+		{72130EE0-F567-452A-BBD2-576415290ED3} = {78D023DD-65B8-4AC3-BBB9-6A2427B84BD8}
+		{CC589492-0C6A-433A-B871-D0DA8EA4982B} = {78D023DD-65B8-4AC3-BBB9-6A2427B84BD8}
+		{F9F154D0-A205-4083-B0E1-0DA54224237C} = {78D023DD-65B8-4AC3-BBB9-6A2427B84BD8}
+	EndGlobalSection
+EndGlobal
