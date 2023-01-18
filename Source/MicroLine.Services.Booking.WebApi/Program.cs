@@ -1,7 +1,14 @@
+using MicroLine.Services.Booking.WebApi.Infrastructure.MongoDb;
+using System.Reflection;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var executingAssembly = Assembly.GetExecutingAssembly();
+
+builder.Services
+    .AddEndpointsApiExplorer()
+    .AddSwaggerGen()
+    .AddMongoDb(executingAssembly);
 
 var app = builder.Build();
 
