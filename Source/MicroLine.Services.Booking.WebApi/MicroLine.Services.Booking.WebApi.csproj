@@ -1,10 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+	
+  <ItemGroup>
+	<InternalsVisibleTo Include="MicroLine.Services.Booking.Tests.Integration" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="2.14.1" />
