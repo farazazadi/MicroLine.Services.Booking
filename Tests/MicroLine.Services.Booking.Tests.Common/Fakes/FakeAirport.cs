@@ -7,6 +7,7 @@ namespace MicroLine.Services.Booking.Tests.Common.Fakes;
 public static class FakeAirport
 {
     public static Airport NewFake(
+        Id? externalId = null,
         IcaoCode? icaoCode = null,
         IataCode? iataCode = null,
         AirportName? airportName = null,
@@ -16,6 +17,8 @@ public static class FakeAirport
     {
         var faker = new Faker();
 
+        externalId ??= Id.Create();
+
         icaoCode ??= NewFakeIcaoCode(faker);
         iataCode ??= NewFakeIataCode(faker);
 
@@ -24,15 +27,14 @@ public static class FakeAirport
         airportName ??= NewFakeAirportName(faker, airportLocation.City);
 
 
-        return Airport.Create(
-            icaoCode, iataCode, airportName, baseUtcOffset, airportLocation);
+        return Airport.Create(externalId, icaoCode, iataCode, airportName, baseUtcOffset, airportLocation);
     }
 
     public static Airport NewFake(double latitude, double longitude)
     {
         var faker = new Faker();
 
-        var airportLocation = NewFakeAirportLocation(faker, latitude, longitude);
+        var airportLocation = NewFakeAirportLocation(faker);
         var airportName = NewFakeAirportName(faker, airportLocation.City);
 
         return NewFake(airportName: airportName, airportLocation: airportLocation);
@@ -71,7 +73,7 @@ public static class FakeAirport
         return AirportName.Create($"{city} International Airport");
     }
 
-    private static AirportLocation NewFakeAirportLocation(Faker faker, double? latitude  = null, double? longitude = null)
+    private static AirportLocation NewFakeAirportLocation(Faker faker)
     {
         var country = faker.Address.Country();
         var region = faker.Address.State();

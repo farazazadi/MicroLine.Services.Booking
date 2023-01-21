@@ -9,6 +9,7 @@ internal class CreateAirport
 {
     public record Command : IRequest<string>
     {
+        public required string ExternalId { get; init; }
         public required string IcaoCode { get; init; }
         public required string IataCode { get; init; }
         public required string Name { get; init; }
@@ -46,6 +47,7 @@ internal class CreateAirport
 
 
             var airport = Airport.Create(
+                command.ExternalId,
                 icaoCode,
                 command.IataCode,
                 command.Name,

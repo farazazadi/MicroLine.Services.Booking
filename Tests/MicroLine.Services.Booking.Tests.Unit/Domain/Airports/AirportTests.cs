@@ -9,6 +9,7 @@ public class AirportTests
     public void Airport_ShouldBeCreatedAsExpected()
     {
         // Given
+        var externalId = Id.Create();
         var icaoCode = IcaoCode.Create("CYYJ");
         var iataCode = IataCode.Create("YYJ");
         var name = AirportName.Create("Victoria International Airport");
@@ -16,7 +17,7 @@ public class AirportTests
         var airportLocation = AirportLocation.Create("Canada", "British Columbia", "Victoria");
 
         // When
-        var airport = Airport.Create(icaoCode, iataCode, name, baseUtcOffset, airportLocation);
+        var airport = Airport.Create(externalId, icaoCode, iataCode, name, baseUtcOffset, airportLocation);
 
         // Then
         airport.Id.ToString().Should().Be($"{iataCode}-{airport.Location.City}");
