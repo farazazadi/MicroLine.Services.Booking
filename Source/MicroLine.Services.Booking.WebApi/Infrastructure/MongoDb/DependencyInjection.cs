@@ -1,10 +1,11 @@
 ﻿using MicroLine.Services.Booking.WebApi.Infrastructure.MongoDb.Interceptors;
 using System.Reflection;
 using MicroLine.Services.Booking.WebApi.Infrastructure.MongoDb.Configurations;
+using MongoDB.Bson;
 
 namespace MicroLine.Services.Booking.WebApi.Infrastructure.MongoDb;
 
-public static class DependencyInjection
+internal static class DependencyInjection
 {
     public static IServiceCollection AddMongoDb(this IServiceCollection services, params Assembly[] assemblies)
     {
@@ -35,9 +36,16 @@ public static class DependencyInjection
             .ToList()
             .ForEach(typeInfo =>
             {
-                var config = Activator.CreateInstance(typeInfo) as IMongoConfiguration;
-                config?.Configure();
+                try
+                {
+                    var config = Activator.CreateInstance(typeInfo) as IMongoConfiguration;
+                    config?.Configure();
+                }
+                catch (BsonSerializationException ex)
+                    when (ex.Message.StartsWith("There is already a serializer registered"))
+                { }
             });
+
     }
-    
+
 }
