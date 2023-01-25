@@ -1,7 +1,22 @@
+using MediatR;
+using MicroLine.Services.Booking.WebApi.Infrastructure.MongoDb;
+using System.Reflection;
+using MicroLine.Services.Booking.WebApi.Infrastructure.Inbox;
+using MicroLine.Services.Booking.WebApi.Infrastructure.Mapster;
+using MicroLine.Services.Booking.WebApi.Infrastructure.RabbitMq;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var executingAssembly = Assembly.GetExecutingAssembly();
+
+builder.Services
+    .AddEndpointsApiExplorer()
+    .AddSwaggerGen()
+    .AddMongoDb(executingAssembly)
+    .AddMediatR(executingAssembly)
+    .AddMapster()
+    .AddRabbitMq()
+    .AddInbox();
 
 var app = builder.Build();
 

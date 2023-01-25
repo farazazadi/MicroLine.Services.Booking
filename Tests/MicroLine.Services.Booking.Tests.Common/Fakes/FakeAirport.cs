@@ -1,0 +1,85 @@
+﻿using Bogus;
+using MicroLine.Services.Booking.Domain.Airports;
+using MicroLine.Services.Booking.Domain.Common.ValueObjects;
+
+namespace MicroLine.Services.Booking.Tests.Common.Fakes;
+
+public static class FakeAirport
+{
+    public static Airport NewFake(
+        Id? externalId = null,
+        IcaoCode? icaoCode = null,
+        IataCode? iataCode = null,
+        AirportName? airportName = null,
+        BaseUtcOffset? baseUtcOffset = null,
+        AirportLocation? airportLocation = null
+    )
+    {
+        var faker = new Faker();
+
+        externalId ??= Id.Create();
+
+        icaoCode ??= NewFakeIcaoCode(faker);
+        iataCode ??= NewFakeIataCode(faker);
+
+        baseUtcOffset ??= ValueObjects.FakeBaseUtcOffset.NewFake();
+        airportLocation ??= NewFakeAirportLocation(faker);
+        airportName ??= NewFakeAirportName(faker, airportLocation.City);
+
+
+        return Airport.Create(externalId, icaoCode, iataCode, airportName, baseUtcOffset, airportLocation);
+    }
+
+    public static Airport NewFake(double latitude, double longitude)
+    {
+        var faker = new Faker();
+
+        var airportLocation = NewFakeAirportLocation(faker);
+        var airportName = NewFakeAirportName(faker, airportLocation.City);
+
+        return NewFake(airportName: airportName, airportLocation: airportLocation);
+    }
+
+    public static List<Airport> NewFakeList(int count)
+    {
+        var airports = new List<Airport>();
+
+        for (var i = 0; i < count; i++)
+        {
+            var airport = NewFake();
+            airports.Add(airport);
+        }
+
+        return airports;
+    }
+
+    private static IcaoCode NewFakeIcaoCode(Faker faker)
+    {
+        var icaoCode = faker.Random.String2(4, 4, RandomSelectionAllowedCharacters.UpperCaseLetters);
+        return IcaoCode.Create(icaoCode);
+    }
+
+    private static IataCode NewFakeIataCode(Faker faker)
+    {
+        var iataCode = faker.Random.String2(3, 3, RandomSelectionAllowedCharacters.UpperCaseLetters);
+
+        return IataCode.Create(iataCode);
+
+    }
+
+    private static AirportName NewFakeAirportName(Faker faker, string? city = null)
+    {
+        city ??= faker.Address.City();
+        return AirportName.Create($"{city} International Airport");
+    }
+
+    private static AirportLocation NewFakeAirportLocation(Faker faker)
+    {
+        var country = faker.Address.Country();
+        var region = faker.Address.State();
+        var city = faker.Address.City();
+
+        return AirportLocation.Create(country ,region ,city);
+    }
+
+}
