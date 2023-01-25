@@ -1,7 +1,9 @@
 ﻿using MicroLine.Services.Booking.Domain.Airports;
+using MicroLine.Services.Booking.Domain.Common.ValueObjects;
 using MicroLine.Services.Booking.Tests.Common.Fakes;
 using MicroLine.Services.Booking.Tests.Integration.Common;
 using MicroLine.Services.Booking.WebApi.Features.Airports;
+using MicroLine.Services.Booking.WebApi.Infrastructure.Integration.IncomingEvents.Airline;
 
 namespace MicroLine.Services.Booking.Tests.Integration.Features.Airports;
 
@@ -72,4 +74,39 @@ public class CreateAirportTests : IntegrationTestBase
         result.Should().BeNull();
     }
 
+
+    [Fact]
+    public async Task Airport_ShouldBeCreated_WhenAirportCreatedIntegrationEventReceived()
+    {
+        // Given
+        var integrationEvent = new AirportCreatedIntegrationEvent
+        {
+            Id = Id.Create(),
+            IcaoCode = "FHZO",
+            IataCode = "CIN",
+            Name = "Ferryview International Airport",
+            BaseUtcOffset = new AirportCreatedIntegrationEvent.BaseUtcOffsetModel(-8, 0),
+            Location = new AirportCreatedIntegrationEvent.AirportLocationModel("Puerto Rico", "Rhode Island", "Ferryview")
+        };
+
+        // When
+        RabbitMqPublisher.Publish(integrationEvent, AirlineExchangeName);
+
+        // Then
+        var airportId = $"{integrationEvent.IataCode}-{integrationEvent.Location.City}";
+
+        var airport = await WaitUntilGetAsync<Airport>(airport => airport.Id == airportId);
+
+        airport.Id.ToString().Should().Be(airportId);
+        airport.IcaoCode.ToString().Should().Be(integrationEvent.IcaoCode);
+        airport.IataCode.ToString().Should().Be(integrationEvent.IataCode);
+        airport.Name.ToString().Should().Be(integrationEvent.Name);
+
+        airport.BaseUtcOffset.Hours.Should().Be(integrationEvent.BaseUtcOffset.Hours);
+        airport.BaseUtcOffset.Minutes.Should().Be(integrationEvent.BaseUtcOffset.Minutes);
+
+        airport.Location.Country.Should().Be(integrationEvent.Location.Country);
+        airport.Location.Region.Should().Be(integrationEvent.Location.Region);
+        airport.Location.City.Should().Be(integrationEvent.Location.City);
+    }
 }

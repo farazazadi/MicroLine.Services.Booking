@@ -1,12 +1,33 @@
-﻿using MediatR;
+﻿using MapsterMapper;
+using MediatR;
 using MicroLine.Services.Booking.Domain.Airports;
 using MicroLine.Services.Booking.Domain.Common.ValueObjects;
+using MicroLine.Services.Booking.WebApi.Infrastructure.Integration.IncomingEvents.Airline;
 using MicroLine.Services.Booking.WebApi.Infrastructure.MongoDb;
 
 namespace MicroLine.Services.Booking.WebApi.Features.Airports;
 
 internal class CreateAirport
 {
+    public class AirportCreatedIntegrationEventHandler : INotificationHandler<AirportCreatedIntegrationEvent>
+    {
+        private readonly ISender _sender;
+        private readonly IMapper _mapper;
+
+        public AirportCreatedIntegrationEventHandler(ISender sender, IMapper mapper)
+        {
+            _sender = sender;
+            _mapper = mapper;
+        }
+
+        public async Task Handle(AirportCreatedIntegrationEvent integrationEvent, CancellationToken token)
+        {
+            var command = _mapper.Map<Command>(integrationEvent);
+            await _sender.Send(command, token);
+        }
+    }
+
+
     public record Command : IRequest<string>
     {
         public required string ExternalId { get; init; }
@@ -62,6 +83,5 @@ internal class CreateAirport
             return airport.Id;
         }
     }
-
 
 }
