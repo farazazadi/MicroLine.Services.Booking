@@ -62,6 +62,7 @@ internal sealed class RabbitMqSubscriber : BackgroundService
 
                 foreach (var binding in bindings!)
                 {
+                    _channel.ExchangeDeclare(binding.ExchangeName, ExchangeType.Fanout, durable:true);
                     _channel.QueueDeclare(binding.QueueName, durable: true, exclusive: false, autoDelete: false);
                     _channel.QueueBind(binding.QueueName, binding.ExchangeName, routingKey: string.Empty);
                 }
