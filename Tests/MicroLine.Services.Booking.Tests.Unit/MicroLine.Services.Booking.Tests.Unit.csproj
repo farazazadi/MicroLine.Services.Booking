@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Source\MicroLine.Services.Booking.Domain\MicroLine.Services.Booking.Domain.csproj" />
+    <ProjectReference Include="..\MicroLine.Services.Booking.Tests.Common\MicroLine.Services.Booking.Tests.Common.csproj" />
   </ItemGroup>
 
 </Project>
