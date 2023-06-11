@@ -8,6 +8,7 @@
 	
   <ItemGroup>
 	<InternalsVisibleTo Include="MicroLine.Services.Booking.Tests.Integration" />
+	<InternalsVisibleTo Include="MicroLine.Services.Booking.Tests.Common" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MicroLine.Services.Booking.WebApi.Infrastructure.Integration;
+using MicroLine.Services.Booking.WebApi.Common.Integration;
 using MicroLine.Services.Booking.WebApi.Infrastructure.MongoDb;
 using Microsoft.Extensions.Options;
 using Polly;

@@ -1,4 +1,4 @@
-﻿using MicroLine.Services.Booking.WebApi.Infrastructure.Integration;
+﻿using MicroLine.Services.Booking.WebApi.Common.Integration;
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Contrib.WaitAndRetry;
