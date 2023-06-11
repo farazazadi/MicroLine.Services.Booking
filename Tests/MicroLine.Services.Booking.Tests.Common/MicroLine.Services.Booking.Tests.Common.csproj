@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Source\MicroLine.Services.Booking.Domain\MicroLine.Services.Booking.Domain.csproj" />
+    <ProjectReference Include="..\..\Source\MicroLine.Services.Booking.WebApi\MicroLine.Services.Booking.WebApi.csproj" />
   </ItemGroup>
 
 </Project>

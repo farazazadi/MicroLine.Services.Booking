@@ -1,7 +1,8 @@
 ﻿using System.Reflection;
+using MicroLine.Services.Booking.WebApi.Infrastructure;
 using MicroLine.Services.Booking.WebApi.Infrastructure.Inbox;
 
-namespace MicroLine.Services.Booking.WebApi.Infrastructure.Integration;
+namespace MicroLine.Services.Booking.WebApi.Common.Integration;
 
 internal static class IntegrationExtensions
 {
@@ -18,7 +19,7 @@ internal static class IntegrationExtensions
 
     public static IntegrationEvent? ToIntegrationEvent(this InboxMessage message)
     {
-        var type = GetCorrespondingIntegrationEventType(message.Subject);
+        var type = message.Subject.GetCorrespondingIntegrationEventType();
 
         if (type is null)
             return null;
