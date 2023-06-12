@@ -15,7 +15,7 @@ internal static class DependencyInjection
         config.Scan(Assembly.GetExecutingAssembly());
 
         services.AddSingleton(config);
-        services.AddSingleton<IMapper, ServiceMapper>();
+        services.AddSingleton<IMapper, Mapper>();
 
         return services;
     }

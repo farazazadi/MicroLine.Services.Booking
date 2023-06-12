@@ -13,7 +13,7 @@ builder.Services
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
     .AddMongoDb(executingAssembly)
-    .AddMediatR(executingAssembly)
+    .AddMediatR(config => config.RegisterServicesFromAssembly(executingAssembly))
     .AddMapster()
     .AddRabbitMq()
     .AddInbox();
