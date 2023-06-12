@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MicroLine.Services.Booking.WebApi.Infrastructure;
 
@@ -15,7 +16,12 @@ internal static class HelperExtensions
         => JsonSerializer.Serialize(value);
 
     public static dynamic? ReadFromJson(this string jsonString, Type type)
-        => JsonSerializer.Deserialize(jsonString, type);
+    {
+        JsonSerializerOptions options = new ()
+        {
+            Converters = { new JsonStringEnumConverter() }
+        };
 
-
+        return JsonSerializer.Deserialize(jsonString, type, options);
+    }
 }
