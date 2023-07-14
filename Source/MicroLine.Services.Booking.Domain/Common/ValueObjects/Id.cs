@@ -23,7 +23,7 @@ public sealed class Id : ValueObject
     private static void Validate(string id)
     {
         if (string.IsNullOrWhiteSpace(id))
-            throw new InvalidIdException(id);
+            throw new InvalidIdException($"Id ({id}) is not valid!");
     }
 
 
