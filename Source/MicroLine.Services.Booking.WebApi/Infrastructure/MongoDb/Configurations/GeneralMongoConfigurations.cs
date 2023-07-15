@@ -21,9 +21,24 @@ internal class GeneralMongoConfigurations : IMongoConfiguration
             new GuidSerializer(BsonType.String)
         );
 
-        ValueConvertor<Id, string>.Register(id => id, idString => idString);
+        RegisterCommonValueObjectsConvertors();
 
         RegisterConventions();
+    }
+
+    private static void RegisterCommonValueObjectsConvertors()
+    {
+        ValueConvertor<Id, string>.Register(
+            id => id.ToString(),
+            idString => Id.Create(idString));
+
+        ValueConvertor<Date, DateOnly>.Register(
+            date => (DateOnly)date,
+            dateOnly => (Date)dateOnly);
+
+        ValueConvertor<Email, string>.Register(
+            email => email.ToString(),
+            emailString => Email.Create(emailString));
     }
 
     private void RegisterConventions()
