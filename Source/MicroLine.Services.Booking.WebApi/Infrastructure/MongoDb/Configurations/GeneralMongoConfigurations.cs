@@ -1,5 +1,6 @@
 ﻿using MicroLine.Services.Booking.Domain.Common.ValueObjects;
 using MicroLine.Services.Booking.WebApi.Infrastructure.MongoDb.Conventions;
+using MicroLine.Services.Booking.WebApi.Infrastructure.MongoDb.Serializers;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
@@ -11,6 +12,15 @@ internal class GeneralMongoConfigurations : IMongoConfiguration
 {
     public void Configure()
     {
+        RegisterSerializers();
+
+        RegisterCommonValueObjectsConvertors();
+
+        RegisterConventions();
+    }
+
+    private static void RegisterSerializers()
+    {
         BsonSerializer.RegisterSerializer(
             typeof(decimal),
             new DecimalSerializer(BsonType.Decimal128)
@@ -21,9 +31,10 @@ internal class GeneralMongoConfigurations : IMongoConfiguration
             new GuidSerializer(BsonType.String)
         );
 
-        RegisterCommonValueObjectsConvertors();
-
-        RegisterConventions();
+        BsonSerializer.RegisterSerializer(
+            typeof(DateOnly),
+            new MongoDateOnlySerializer()
+        );
     }
 
     private static void RegisterCommonValueObjectsConvertors()
