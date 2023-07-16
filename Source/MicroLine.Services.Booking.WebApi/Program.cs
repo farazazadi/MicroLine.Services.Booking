@@ -1,6 +1,6 @@
-using MediatR;
 using MicroLine.Services.Booking.WebApi.Infrastructure.MongoDb;
 using System.Reflection;
+using MicroLine.Services.Booking.WebApi.Features.Passengers;
 using MicroLine.Services.Booking.WebApi.Infrastructure.Inbox;
 using MicroLine.Services.Booking.WebApi.Infrastructure.Mapster;
 using MicroLine.Services.Booking.WebApi.Infrastructure.RabbitMq;
@@ -30,5 +30,8 @@ app.UseHttpsRedirection();
 
 
 app.MapGet("/", () => "MicroLine.Services.Booking");
+
+
+app.MapPassengerEndpoints();
 
 app.Run();
