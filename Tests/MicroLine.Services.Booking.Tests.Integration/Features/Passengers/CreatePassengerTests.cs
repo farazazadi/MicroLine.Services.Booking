@@ -1,8 +1,11 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using MicroLine.Services.Booking.Domain.Common.ValueObjects;
 using MicroLine.Services.Booking.Domain.Passengers;
 using MicroLine.Services.Booking.Tests.Common.Fakes;
+using MicroLine.Services.Booking.Tests.Common.Fakes.ValueObjects;
 using MicroLine.Services.Booking.Tests.Integration.Common;
+using MicroLine.Services.Booking.Tests.Integration.Common.Extensions;
 using MicroLine.Services.Booking.WebApi.Features.Passengers;
 using MicroLine.Services.Booking.WebApi.Features.Passengers.DataTransferObjects;
 
@@ -16,7 +19,7 @@ public class CreatePassengerTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task Passenger_ShouldBeCreatedAsExpected_WhenRequestIsValid()
+    public async Task CreatePassenger_ShouldBeCreatedAsExpected_WhenRequestIsValid()
     {
         // Given
         Passenger passenger = FakePassenger.NewFake();
@@ -47,6 +50,38 @@ public class CreatePassengerTests : IntegrationTestBase
 
 
         response.Headers.Location!.ToString().Should().Be($"api/passengers/{passengerDto!.Id}");
+    }
+
+
+    [Fact]
+    public async Task CreatePassenger_ShouldReturnCreatePassengerProblem_WhenAPassengerWithSamePassportAndRelatedExternalUserAlreadyExist()
+    {
+        // Given
+        Id relatedUserExternalId = Id.Create();
+
+        Passport passport = FakePassport.NewFake();
+
+
+        Passenger passenger = FakePassenger.NewFake(
+            relatedUserExternalId: relatedUserExternalId,
+            passport: passport);
+
+        await SaveAsync(passenger);
+
+        var request = Mapper.Map<CreatePassenger.Request>(passenger);
+
+
+        // When
+        HttpResponseMessage response = await Client.PostAsJsonAsync("api/passengers", request);
+
+
+        // Then
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        var problemDetails = await response.GetProblemResultAsync();
+
+        problemDetails.Extensions[ProblemDetailsExtensions.ExceptionCode]?.ToString()
+            .Should().Be(nameof(CreatePassengerException));
     }
 
 }

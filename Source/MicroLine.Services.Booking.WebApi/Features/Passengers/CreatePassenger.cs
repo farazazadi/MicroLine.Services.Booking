@@ -70,12 +70,26 @@ internal sealed class CreatePassenger
                 request.ContactNumber
             );
 
+
+            await EnsureThereIsNoPassengerWithSamePassportAndRelatedUser(passenger, token);
+
             _mongoService.Add(passenger, token);
             await _mongoService.SaveChangesAsync(token);
 
             var passengerDto = _mapper.Map<PassengerDto>(passenger);
 
             return passengerDto;
+        }
+
+        private async Task EnsureThereIsNoPassengerWithSamePassportAndRelatedUser(Passenger passenger, CancellationToken token)
+        {
+            var passengerWithSamePassportAndRelatedUser = await _mongoService.GetAsync<Passenger>(
+                p => p.RelatedUserExternalId == passenger.RelatedUserExternalId
+                     && p.Passport == passenger.Passport,
+                token);
+
+            if (passengerWithSamePassportAndRelatedUser is not null)
+                throw new CreatePassengerException("There is already a passenger with same 'Passport' and 'Related User'!");
         }
     }
 
