@@ -19,7 +19,7 @@ public class CreatePassengerTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task CreatePassenger_ShouldBeCreatedAsExpected_WhenRequestIsValid()
+    public async Task CreatePassenger_ShouldCreatedPassengerAsExpected_WhenRequestIsValid()
     {
         // Given
         Passenger passenger = FakePassenger.NewFake();
@@ -65,6 +65,38 @@ public class CreatePassengerTests : IntegrationTestBase
         Passenger passenger = FakePassenger.NewFake(
             relatedUserExternalId: relatedUserExternalId,
             passport: passport);
+
+        await SaveAsync(passenger);
+
+        var request = Mapper.Map<CreatePassenger.Request>(passenger);
+
+
+        // When
+        HttpResponseMessage response = await Client.PostAsJsonAsync("api/passengers", request);
+
+
+        // Then
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+
+        var problemDetails = await response.GetProblemResultAsync();
+
+        problemDetails.Extensions[ProblemDetailsExtensions.ExceptionCode]?.ToString()
+            .Should().Be(nameof(CreatePassengerException));
+    }
+
+
+    [Fact]
+    public async Task CreatePassenger_ShouldReturnCreatePassengerProblem_WhenAPassengerWithSameNatinalIdAndRelatedExternalUserAlreadyExist()
+    {
+        // Given
+        Id relatedUserExternalId = Id.Create();
+
+        NationalId nationalId = FakeNationalId.NewFake();
+
+
+        Passenger passenger = FakePassenger.NewFake(
+            relatedUserExternalId: relatedUserExternalId,
+            nationalId: nationalId);
 
         await SaveAsync(passenger);
 

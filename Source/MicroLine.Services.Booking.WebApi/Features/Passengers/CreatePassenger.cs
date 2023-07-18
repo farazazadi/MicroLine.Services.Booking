@@ -1,5 +1,6 @@
 ﻿using MapsterMapper;
 using MediatR;
+using MicroLine.Services.Booking.Domain.Common;
 using MicroLine.Services.Booking.Domain.Passengers;
 using MicroLine.Services.Booking.WebApi.Features.Passengers.DataTransferObjects;
 using MicroLine.Services.Booking.WebApi.Infrastructure.MongoDb;
@@ -70,8 +71,12 @@ internal sealed class CreatePassenger
                 request.ContactNumber
             );
 
+            Result validationResult = 
+                await EnsureThereIsNoPassengerWithSameNationalIdAndRelatedUser(passenger, token) +
+                await EnsureThereIsNoPassengerWithSamePassportAndRelatedUser(passenger, token);
 
-            await EnsureThereIsNoPassengerWithSamePassportAndRelatedUser(passenger, token);
+            if (!validationResult.IsSuccess)
+                throw new CreatePassengerException(validationResult.GetFailureReasons());
 
             _mongoService.Add(passenger, token);
             await _mongoService.SaveChangesAsync(token);
@@ -81,15 +86,28 @@ internal sealed class CreatePassenger
             return passengerDto;
         }
 
-        private async Task EnsureThereIsNoPassengerWithSamePassportAndRelatedUser(Passenger passenger, CancellationToken token)
+        private async Task<Result> EnsureThereIsNoPassengerWithSameNationalIdAndRelatedUser(Passenger passenger, CancellationToken token)
+        {
+            var passengerWithSameNationalIdAndRelatedUser = await _mongoService.GetAsync<Passenger>(
+                p => p.RelatedUserExternalId == passenger.RelatedUserExternalId
+                     && p.NationalId == passenger.NationalId,
+                token);
+
+            return passengerWithSameNationalIdAndRelatedUser is not null ?
+                Result.Fail("There is already a passenger with same 'NationalId' and 'Related User'!") :
+                new Result();
+        }
+
+        private async Task<Result> EnsureThereIsNoPassengerWithSamePassportAndRelatedUser(Passenger passenger, CancellationToken token)
         {
             var passengerWithSamePassportAndRelatedUser = await _mongoService.GetAsync<Passenger>(
                 p => p.RelatedUserExternalId == passenger.RelatedUserExternalId
                      && p.Passport == passenger.Passport,
                 token);
 
-            if (passengerWithSamePassportAndRelatedUser is not null)
-                throw new CreatePassengerException("There is already a passenger with same 'Passport' and 'Related User'!");
+            return passengerWithSamePassportAndRelatedUser is not null ?
+                Result.Fail("There is already a passenger with same 'Passport' and 'Related User'!") :
+                new Result();
         }
     }
 
