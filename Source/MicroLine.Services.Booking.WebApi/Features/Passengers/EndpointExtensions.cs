@@ -5,6 +5,7 @@ internal static class EndpointExtensions
     public static WebApplication MapPassengerEndpoints(this WebApplication app)
     { 
         CreatePassenger.MapEndpoint(app);
+        GetPassengerById.MapEndpoint(app);
 
         return app;
     }

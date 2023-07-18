@@ -1,0 +1,68 @@
+﻿using System.Net;
+using System.Net.Http.Json;
+using MicroLine.Services.Booking.Domain.Common.ValueObjects;
+using MicroLine.Services.Booking.Domain.Passengers;
+using MicroLine.Services.Booking.Tests.Common.Fakes;
+using MicroLine.Services.Booking.Tests.Integration.Common;
+using MicroLine.Services.Booking.Tests.Integration.Common.Extensions;
+using MicroLine.Services.Booking.WebApi.Common.Exceptions;
+using MicroLine.Services.Booking.WebApi.Features.Passengers.DataTransferObjects;
+using Microsoft.AspNetCore.Mvc;
+
+namespace MicroLine.Services.Booking.Tests.Integration.Features.Passengers;
+
+public class GetPassengerByIdTests : IntegrationTestBase
+{
+    public GetPassengerByIdTests(BookingWebApplicationFactory bookingWebApplicationFactory) : base(bookingWebApplicationFactory)
+    { }
+
+    [Fact]
+    public async Task GetPassenger_ShouldReturnPassenger_AsExpected()
+    {
+        // Given
+        Passenger passenger = FakePassenger.NewFake();
+
+        await SaveAsync(passenger);
+
+        PassengerDto expected = Mapper.Map<PassengerDto>(passenger);
+
+
+        // When
+        HttpResponseMessage response = await Client.GetAsync($"/api/passengers/{passenger.Id}");
+
+
+        // Then
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        PassengerDto? passengerDto = await response.Content.ReadFromJsonAsync<PassengerDto>();
+
+        passengerDto.Should().BeEquivalentTo(expected, options =>
+        {
+            options.Excluding(dto => dto.AuditingDetails);
+
+            return options;
+        });
+    }
+
+
+    [Fact]
+    public async Task GetPassenger_ShouldReturnNotFoundProblem_WhenIdIsNotValid()
+    {
+        // Given
+        Id id = Id.Create();
+
+
+        // When
+        HttpResponseMessage response = await Client.GetAsync($"api/passengers/{id}");
+
+
+        // Then
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+
+        ProblemDetails problemDetails = await response.GetProblemResultAsync();
+
+        problemDetails.Extensions[ProblemDetailsExtensions.ExceptionCode]?.ToString()
+            .Should().Be(nameof(NotFoundException));
+    }
+
+}
