@@ -6,6 +6,7 @@ internal static class EndpointExtensions
     { 
         CreatePassenger.MapEndpoint(app);
         GetPassengerById.MapEndpoint(app);
+        GetAllPassengers.MapEndpoint(app);
 
         return app;
     }

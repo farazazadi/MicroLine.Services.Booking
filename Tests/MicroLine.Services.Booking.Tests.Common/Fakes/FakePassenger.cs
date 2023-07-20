@@ -24,4 +24,10 @@ public static class FakePassenger
 
         return Passenger.Create(relatedUserExternalId, nationalId, passport, email, contactNumber);
     }
+
+    public static List<Passenger> NewFakeList(int count, Id? relatedUserExternalId = null)
+        => Enumerable
+            .Range(1, count)
+            .Select(_ => NewFake(relatedUserExternalId: relatedUserExternalId))
+            .ToList();
 }

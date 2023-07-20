@@ -38,10 +38,17 @@ public abstract class IntegrationTestBase
     }
 
     protected Task<TEntity?> FindAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : AggregateRoot
-        => _mongoService.GetAsync<TEntity>(predicate);
+        => _mongoService.GetAsync(predicate);
 
     protected Task<TEntity?> FindByIdAsync<TEntity>(Id id) where TEntity : AggregateRoot
         => _mongoService.GetByIdAsync<TEntity>(id);
+
+    protected Task<IReadOnlyList<TEntity>> FindAllAsync<TEntity>(Expression<Func<TEntity, bool>> predicate)
+        where TEntity : AggregateRoot
+        => _mongoService.GetAllAsync(predicate);
+
+    protected Task<IReadOnlyList<TEntity>> GetAllAsync<TEntity>() where TEntity : AggregateRoot
+        => _mongoService.GetAllAsync<TEntity>();
 
     protected Task SaveAsync<TEntity>(TEntity entity) where TEntity : AggregateRoot
     {
@@ -52,6 +59,14 @@ public abstract class IntegrationTestBase
     protected Task SaveAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : AggregateRoot
     {
         _mongoService.AddRange(entities);
+        return _mongoService.SaveChangesAsync();
+    }
+
+    protected Task SaveAsync<TEntity>(params IEnumerable<TEntity>[] entitiesList) where TEntity : AggregateRoot
+    {
+        foreach (var entities in entitiesList)
+            _mongoService.AddRange(entities);
+
         return _mongoService.SaveChangesAsync();
     }
 
