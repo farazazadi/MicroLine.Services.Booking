@@ -62,6 +62,14 @@ public abstract class IntegrationTestBase
         return _mongoService.SaveChangesAsync();
     }
 
+    protected Task SaveAsync<TEntity>(params IEnumerable<TEntity>[] entitiesList) where TEntity : AggregateRoot
+    {
+        foreach (var entities in entitiesList)
+            _mongoService.AddRange(entities);
+
+        return _mongoService.SaveChangesAsync();
+    }
+
 
     public async Task<TEntity> WaitUntilGetAsync<TEntity>(Expression<Func<TEntity, bool>> predicate,
         int delayInterval = 1000, CancellationToken token = default)
