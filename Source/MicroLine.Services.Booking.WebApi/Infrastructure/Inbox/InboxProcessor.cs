@@ -10,8 +10,9 @@ namespace MicroLine.Services.Booking.WebApi.Infrastructure.Inbox;
 internal sealed class InboxProcessor : BackgroundService
 {
     private readonly IPublisher _publisher;
-    private readonly MongoService _mongoService;
     private readonly ILogger<InboxProcessor> _logger;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+
     private readonly PeriodicTimer _periodicTimer;
 
     private readonly AsyncCircuitBreakerPolicy _circuitBreakerPolicy;
@@ -19,12 +20,12 @@ internal sealed class InboxProcessor : BackgroundService
     public InboxProcessor(
         IOptions<InboxProcessorOptions> options,
         IPublisher publisher,
-        MongoService mongoService,
-        ILogger<InboxProcessor> logger)
+        ILogger<InboxProcessor> logger,
+        IServiceScopeFactory serviceScopeFactory)
     {
         _publisher = publisher;
-        _mongoService = mongoService;
         _logger = logger;
+        _serviceScopeFactory = serviceScopeFactory;
 
         var option = options.Value;
 
@@ -58,7 +59,11 @@ internal sealed class InboxProcessor : BackgroundService
 
     public async Task ProcessAsync(CancellationToken token)
     {
-        var inboxMessages = await _mongoService
+        await using var scope = _serviceScopeFactory.CreateAsyncScope();
+
+        var mongoService = scope.ServiceProvider.GetRequiredService<MongoService>();
+
+        var inboxMessages = await mongoService
                 .GetAllAsync<InboxMessage>(message => message.Processed == false, token);
 
         if (!inboxMessages.Any())
@@ -78,9 +83,9 @@ internal sealed class InboxProcessor : BackgroundService
 
                 message.Process();
 
-                _mongoService.Update(message, token);
+                mongoService.Update(message, token);
 
-                await _mongoService.SaveChangesAsync(token);
+                await mongoService.SaveChangesAsync(token);
 
             }
             catch (Exception ex)

@@ -12,7 +12,8 @@ namespace MicroLine.Services.Booking.WebApi.Infrastructure.RabbitMq.Subscriber;
 
 internal sealed class RabbitMqSubscriber : BackgroundService
 {
-    private readonly MongoService _mongoService;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+
     private IConnection? _connection;
     private IModel? _channel;
     private readonly List<string> _queuesName;
@@ -22,9 +23,9 @@ internal sealed class RabbitMqSubscriber : BackgroundService
     public RabbitMqSubscriber(
         IOptions<RabbitMqOptions> rabbitMqOptions,
         IOptions<RabbitMqSubscriberOptions> rabbitMqSubscriberOptions,
-        MongoService mongoService)
+        IServiceScopeFactory serviceScopeFactory)
     {
-        _mongoService = mongoService;
+
         var options = rabbitMqOptions.Value;
 
         //todo: bindings props should be checked against being null or empty
@@ -71,6 +72,8 @@ internal sealed class RabbitMqSubscriber : BackgroundService
         _asyncRetryPolicy = Policy
             .Handle<Exception>()
             .WaitAndRetryAsync(delays);
+
+        _serviceScopeFactory = serviceScopeFactory;
     }
 
     protected override async Task ExecuteAsync(CancellationToken token)
@@ -104,8 +107,11 @@ internal sealed class RabbitMqSubscriber : BackgroundService
             return;
         }
 
+        await using var scope = _serviceScopeFactory.CreateAsyncScope();
 
-        var messageAlreadyExistInInbox = await MessageAlreadyExistInInbox(args, token);
+        var mongoService = scope.ServiceProvider.GetRequiredService<MongoService>();
+
+        var messageAlreadyExistInInbox = await MessageAlreadyExistInInbox(args, mongoService, token);
 
         if (messageAlreadyExistInInbox)
         {
@@ -114,7 +120,7 @@ internal sealed class RabbitMqSubscriber : BackgroundService
         }
 
 
-        await AddTheMessageToTheInbox(args, token);
+        await AddTheMessageToTheInbox(args, mongoService, token);
 
         _channel?.BasicAck(args.DeliveryTag, false);
     }
@@ -128,16 +134,18 @@ internal sealed class RabbitMqSubscriber : BackgroundService
         return !messageId.IsNullOrWhiteSpace() && !subject.IsNullOrWhiteSpace();
     }
 
-    private async Task<bool> MessageAlreadyExistInInbox(BasicDeliverEventArgs args, CancellationToken token)
+    private async Task<bool> MessageAlreadyExistInInbox(BasicDeliverEventArgs args, MongoService mongoService,
+        CancellationToken token)
     {
         var messageId = args.BasicProperties.MessageId;
 
-        var message = await _mongoService.GetByIdAsync<InboxMessage>(messageId, token);
+        var message = await mongoService.GetByIdAsync<InboxMessage>(messageId, token);
 
         return message is not null;
     }
 
-    private async Task AddTheMessageToTheInbox(BasicDeliverEventArgs args, CancellationToken token)
+    private async Task AddTheMessageToTheInbox(BasicDeliverEventArgs args, MongoService mongoService,
+        CancellationToken token)
     {
         var messageId = args.BasicProperties.MessageId;
         var subject = args.BasicProperties.Type;
@@ -145,9 +153,9 @@ internal sealed class RabbitMqSubscriber : BackgroundService
 
         var inboxMessage = InboxMessage.Create(messageId, subject, content);
 
-        _mongoService.Add(inboxMessage, token);
+        mongoService.Add(inboxMessage, token);
 
-        await _mongoService.SaveChangesAsync(token);
+        await mongoService.SaveChangesAsync(token);
     }
 
 

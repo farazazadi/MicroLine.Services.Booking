@@ -18,7 +18,7 @@ internal static class DependencyInjection
             .ValidateOnStart();
 
         services
-            .AddSingleton<MongoService>()
+            .AddScoped<MongoService>()
             .AddSingleton<ISaveChangesInterceptor, AuditingInterceptor>();
 
         return services;

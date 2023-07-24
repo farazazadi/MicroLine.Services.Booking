@@ -57,11 +57,11 @@ public class FlightScheduledIntegrationEvent : IntegrationEvent
 
     internal class Handler : INotificationHandler<FlightScheduledIntegrationEvent>
     {
-        private readonly MongoService _mongoService;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public Handler(MongoService mongoService)
+        public Handler(IServiceScopeFactory serviceScopeFactory)
         {
-            _mongoService = mongoService;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public async Task Handle(FlightScheduledIntegrationEvent integrationEvent, CancellationToken token)
@@ -124,9 +124,13 @@ public class FlightScheduledIntegrationEvent : IntegrationEvent
                 integrationEvent.Status
             );
 
-            _mongoService.Add(flight, token);
+            await using AsyncServiceScope scope = _serviceScopeFactory.CreateAsyncScope();
 
-            await _mongoService.SaveChangesAsync(token);
+            var mongoService = scope.ServiceProvider.GetRequiredService<MongoService>();
+
+            mongoService.Add(flight, token);
+
+            await mongoService.SaveChangesAsync(token);
         }
     }
 
