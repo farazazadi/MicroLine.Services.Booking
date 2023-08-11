@@ -12,7 +12,7 @@ var executingAssembly = Assembly.GetExecutingAssembly();
 
 builder.Services
     .AddEndpointsApiExplorer()
-    .AddSwaggerGen()
+    .AddSwaggerGen(options => options.CustomSchemaIds(type => type.FullName!.Replace("+", ".")))
     .AddMongoDb(executingAssembly)
     .AddMediatR(config => config.RegisterServicesFromAssembly(executingAssembly))
     .AddMapster()
