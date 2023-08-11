@@ -3,10 +3,14 @@
 internal static class EndpointExtensions
 {
     public static WebApplication MapPassengerEndpoints(this WebApplication app)
-    { 
-        CreatePassenger.MapEndpoint(app);
-        GetPassengerById.MapEndpoint(app);
-        GetAllPassengers.MapEndpoint(app);
+    {
+        RouteGroupBuilder group = app
+            .MapGroup(string.Empty)
+            .WithTags("Passengers");
+        
+        CreatePassenger.MapEndpoint(group);
+        GetPassengerById.MapEndpoint(group);
+        GetAllPassengers.MapEndpoint(group);
 
         return app;
     }

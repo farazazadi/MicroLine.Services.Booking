@@ -9,16 +9,15 @@ namespace MicroLine.Services.Booking.WebApi.Features.Passengers;
 
 internal sealed class GetPassengerById
 {
-    public static WebApplication MapEndpoint(WebApplication app)
+    public static void MapEndpoint(RouteGroupBuilder group)
     {
-        app.MapGet("api/passengers/{id}", async (string id, ISender sender, CancellationToken token) =>
+        group.MapGet("api/passengers/{id}", async (string id, ISender sender, CancellationToken token) =>
         {
             PassengerDto passengerDto = await sender.Send(new Request(id), token);
 
             return Results.Ok(passengerDto);
         });
 
-        return app;
     }
 
     public record Request(string Id) : IRequest<PassengerDto>;

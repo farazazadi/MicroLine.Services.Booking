@@ -9,14 +9,13 @@ namespace MicroLine.Services.Booking.WebApi.Features.Passengers;
 
 internal sealed class GetAllPassengers
 {
-    public static WebApplication MapEndpoint(WebApplication app)
+    public static void MapEndpoint(RouteGroupBuilder group)
     {
-        app.MapGet("api/passengers", async (ISender sender, CancellationToken token) =>
+        group.MapGet("api/passengers", async (ISender sender, CancellationToken token) =>
         {
             IReadOnlyList<PassengerGroup> passengerGroups = await sender.Send(new Request(), token);
             return Results.Ok(passengerGroups);
         });
-        return app;
     }
 
 

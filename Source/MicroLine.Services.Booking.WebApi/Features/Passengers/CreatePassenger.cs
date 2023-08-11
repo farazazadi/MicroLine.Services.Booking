@@ -9,18 +9,17 @@ namespace MicroLine.Services.Booking.WebApi.Features.Passengers;
 
 internal sealed class CreatePassenger
 {
-    public static WebApplication MapEndpoint(WebApplication app)
+    public static void MapEndpoint(RouteGroupBuilder group)
     {
         var baseUrl = "api/passengers";
 
-        app.MapPost(baseUrl, async (Request request, ISender sender, CancellationToken token) =>
+        group.MapPost(baseUrl, async (Request request, ISender sender, CancellationToken token) =>
         {
             PassengerDto response = await sender.Send(request, token);
 
             return Results.Created($"{baseUrl}/{response.Id}", response);
         });
 
-        return app;
     }
 
 
