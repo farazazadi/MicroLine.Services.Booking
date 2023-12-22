@@ -1,13 +1,9 @@
-﻿using System.Net;
-using System.Net.Http.Json;
-using MicroLine.Services.Booking.Domain.Common.ValueObjects;
+﻿using MicroLine.Services.Booking.Domain.Common.ValueObjects;
 using MicroLine.Services.Booking.Domain.Passengers;
 using MicroLine.Services.Booking.Tests.Common.Fakes;
 using MicroLine.Services.Booking.Tests.Integration.Common;
-using MicroLine.Services.Booking.Tests.Integration.Common.Extensions;
 using MicroLine.Services.Booking.WebApi.Common.Exceptions;
 using MicroLine.Services.Booking.WebApi.Features.Passengers.DataTransferObjects;
-using Microsoft.AspNetCore.Mvc;
 
 namespace MicroLine.Services.Booking.Tests.Integration.Features.Passengers;
 
@@ -57,12 +53,15 @@ public class GetPassengerByIdTests : IntegrationTestBase
 
 
         // Then
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-
-        ProblemDetails problemDetails = await response.GetProblemResultAsync();
-
-        problemDetails.Extensions[ProblemDetailsExtensions.ExceptionCode]?.ToString()
-            .Should().Be(nameof(NotFoundException));
+        response
+            .Should()
+            .HaveProblemDetails()
+            .WithStatusCode(StatusCodes.Status404NotFound)
+            .WithTitle(Constants.Rfc9110.Titles.NotFound)
+            .WithDetail($"Passenger with id ({id}) was not found!")
+            .WithInstance($"/api/passengers/{id}")
+            .WithExtensionsThatContain(Constants.ExceptionCode, nameof(NotFoundException))
+            .WithType(Constants.Rfc9110.StatusCodes.NotFound404);
     }
 
 }

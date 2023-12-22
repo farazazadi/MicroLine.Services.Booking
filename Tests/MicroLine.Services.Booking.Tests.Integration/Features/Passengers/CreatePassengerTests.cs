@@ -1,11 +1,8 @@
-﻿using System.Net;
-using System.Net.Http.Json;
-using MicroLine.Services.Booking.Domain.Common.ValueObjects;
+﻿using MicroLine.Services.Booking.Domain.Common.ValueObjects;
 using MicroLine.Services.Booking.Domain.Passengers;
 using MicroLine.Services.Booking.Tests.Common.Fakes;
 using MicroLine.Services.Booking.Tests.Common.Fakes.ValueObjects;
 using MicroLine.Services.Booking.Tests.Integration.Common;
-using MicroLine.Services.Booking.Tests.Integration.Common.Extensions;
 using MicroLine.Services.Booking.WebApi.Features.Passengers;
 using MicroLine.Services.Booking.WebApi.Features.Passengers.DataTransferObjects;
 
@@ -49,7 +46,7 @@ public class CreatePassengerTests : IntegrationTestBase
         });
 
 
-        response.Headers.Location!.ToString().Should().Be($"api/passengers/{passengerDto!.Id}");
+        response.Headers.Location!.ToString().Should().Be($"api/passengers/{passengerDto.Id}");
     }
 
 
@@ -76,17 +73,21 @@ public class CreatePassengerTests : IntegrationTestBase
 
 
         // Then
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response
+            .Should()
+            .HaveProblemDetails()
+            .WithStatusCode(StatusCodes.Status400BadRequest)
+            .WithTitle(Constants.Rfc9110.Titles.BadRequest)
+            .WithDetailThatContains("There is already a passenger with same 'Passport' and 'Related User'!")
+            .WithInstance("/api/passengers")
+            .WithExtensionsThatContain(Constants.ExceptionCode, nameof(CreatePassengerException))
+            .WithType(Constants.Rfc9110.StatusCodes.BadRequest400);
 
-        var problemDetails = await response.GetProblemResultAsync();
-
-        problemDetails.Extensions[ProblemDetailsExtensions.ExceptionCode]?.ToString()
-            .Should().Be(nameof(CreatePassengerException));
     }
 
 
     [Fact]
-    public async Task CreatePassenger_ShouldReturnCreatePassengerProblem_WhenAPassengerWithSameNatinalIdAndRelatedExternalUserAlreadyExist()
+    public async Task CreatePassenger_ShouldReturnCreatePassengerProblem_WhenAPassengerWithSameNationalIdAndRelatedExternalUserAlreadyExist()
     {
         // Given
         Id relatedUserExternalId = Id.Create();
@@ -108,12 +109,16 @@ public class CreatePassengerTests : IntegrationTestBase
 
 
         // Then
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response
+            .Should()
+            .HaveProblemDetails()
+            .WithStatusCode(StatusCodes.Status400BadRequest)
+            .WithTitle(Constants.Rfc9110.Titles.BadRequest)
+            .WithDetailThatContains("There is already a passenger with same 'NationalId' and 'Related User'!")
+            .WithInstance("/api/passengers")
+            .WithExtensionsThatContain(Constants.ExceptionCode, nameof(CreatePassengerException))
+            .WithType(Constants.Rfc9110.StatusCodes.BadRequest400);
 
-        var problemDetails = await response.GetProblemResultAsync();
-
-        problemDetails.Extensions[ProblemDetailsExtensions.ExceptionCode]?.ToString()
-            .Should().Be(nameof(CreatePassengerException));
     }
 
 }

@@ -1,5 +1,4 @@
 ﻿using MicroLine.Services.Booking.Domain.Common.Extensions;
-using MicroLine.Services.Booking.Domain.Common.ValueObjects;
 using MicroLine.Services.Booking.Domain.Flights;
 using MicroLine.Services.Booking.Tests.Common.Fakes;
 using MicroLine.Services.Booking.Tests.Integration.Common;

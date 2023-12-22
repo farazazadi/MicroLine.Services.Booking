@@ -1,6 +1,4 @@
-﻿using System.Net;
-using System.Net.Http.Json;
-using MicroLine.Services.Booking.Domain.Common.ValueObjects;
+﻿using MicroLine.Services.Booking.Domain.Common.ValueObjects;
 using MicroLine.Services.Booking.Domain.Passengers;
 using MicroLine.Services.Booking.Tests.Common.Fakes;
 using MicroLine.Services.Booking.Tests.Integration.Common;
