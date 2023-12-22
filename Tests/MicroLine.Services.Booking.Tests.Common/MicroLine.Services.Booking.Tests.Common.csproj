@@ -1,18 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Bogus" Version="34.0.2" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Bogus" Version="34.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Source\MicroLine.Services.Booking.Domain\MicroLine.Services.Booking.Domain.csproj" />
-    <ProjectReference Include="..\..\Source\MicroLine.Services.Booking.WebApi\MicroLine.Services.Booking.WebApi.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Source\MicroLine.Services.Booking.Domain\MicroLine.Services.Booking.Domain.csproj" />
+		<ProjectReference Include="..\..\Source\MicroLine.Services.Booking.WebApi\MicroLine.Services.Booking.WebApi.csproj" />
+	</ItemGroup>
 
 </Project>
