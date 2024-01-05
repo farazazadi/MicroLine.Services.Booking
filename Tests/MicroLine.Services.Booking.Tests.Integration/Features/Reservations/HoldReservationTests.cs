@@ -91,10 +91,14 @@ public class HoldReservationTests : IntegrationTestBase
         Flight flight = FakeFlight.NewFake();
         await SaveAsync(flight);
 
-        List<Passenger> passengers = FakePassenger.NewFakeList(2);
-        Passenger firstPassenger = passengers.First();
-        Passenger secondPassenger = passengers.Last();
-        List<string> passengersIdList = passengers.Select(p=> p.Id.ToString()).ToList();
+        Passenger firstPassenger = FakePassenger.NewFake();
+        Passenger secondPassenger = FakePassenger.NewFake();
+
+        List<string> passengersIdList = new()
+        {
+            firstPassenger.Id,
+            secondPassenger.Id
+        };
 
         await SaveAsync(firstPassenger);
 
